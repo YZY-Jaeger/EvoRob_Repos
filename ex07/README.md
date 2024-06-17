@@ -18,7 +18,7 @@ Hidden Layer: 2 neurons
 Output Layer: 1 neuron
 Compared to last task sheet, now ANN has one hidden layer with 2 neurons. 
 
-###Key Improvements
+### Key Improvements
 - **Optimization of Fitness Evaluation**:
 
 Initially, the program was running slowly due to repeated calls to the evaluate_fitness function within the rank-based selection process.
