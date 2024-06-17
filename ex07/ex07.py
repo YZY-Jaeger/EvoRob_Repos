@@ -1,12 +1,7 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-
-# Sigmoid activation function with negative outputs allowed
-def sigmoid(x):
-    return 2 / (1 + np.exp(-2 * x)) - 1
-
-import numpy as np
 
 def sigmoid(x):
     # Using a sigmoid activation function that allows for negative outputs
@@ -197,6 +192,20 @@ surf = ax.plot_surface(X, Y, Z, cmap='viridis', edgecolor='none')
 ax.set_xlabel('Input 1')
 ax.set_ylabel('Input 2')
 ax.set_zlabel('Network Output')
-ax.set_title('3D Visualization of XOR Neural Network Output')
+
+# Add population size and max generation to the plot title
+plt.title(f'3D Visualization of XOR Neural Network Output\nPopulation Size: {population_size}, Max Generations: {max_generations}')
+
 fig.colorbar(surf)
+
+# Save the plot 
+
+folder_path = 'ex07'
+os.makedirs(folder_path, exist_ok=True)
+filename = os.path.join(folder_path, f'XOR_NN_Pop{population_size}_Gen{max_generations}.png')
+plt.savefig(filename)
+
+#filename = f'XOR_NN_Pop{population_size}_Gen{max_generations}.png'
+#plt.savefig(filename)
+
 plt.show()
