@@ -33,7 +33,7 @@ class NeuralNetwork:
 
         # Initialize biases for hidden layer
         if biases is None:
-            self.biases = 2* np.random.rand(self.hidden_size)-1  # 1 bias for each hidden neuron
+            self.biases =  np.random.rand(self.hidden_size)  # 1 bias for each hidden neuron
         else:
             self.biases = biases
 
@@ -156,7 +156,7 @@ mutation_rate = 0.3
 input_size = 2
 hidden_size = 2
 output_size = 1
-max_generations = 200
+max_generations = 2000
 
 # Initialize the population correctly
 population = initialize_population(population_size)
