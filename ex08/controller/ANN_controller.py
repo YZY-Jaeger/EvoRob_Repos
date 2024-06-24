@@ -1,7 +1,7 @@
 import numpy as np
 import random
-from swarmy.actuation import Actuation
-from evolution.evolution import Evolution
+from swarmy.actuation import Actuation  # Assuming this imports are correct
+from evolution.evolution import Evolution  # Assuming this imports are correct
 from copy import deepcopy
 
 def activation_function(x):
@@ -21,22 +21,22 @@ class ANN:
         output = activation_function(np.dot(hidden, self.weights_hidden_output) + self.bias_output)
         return output
 
-    def mutate(self, mutation_rate=0.1):
+    def mutate(self, mutation_value=0.1):
         # Mutate weights and biases by adding a small random value
-        self.weights_input_hidden += np.random.randn(*self.weights_input_hidden.shape) * mutation_rate
-        self.weights_hidden_output += np.random.randn(*self.weights_hidden_output.shape) * mutation_rate
-        self.bias_hidden += np.random.randn(*self.bias_hidden.shape) * mutation_rate
-        self.bias_output += np.random.randn(*self.bias_output.shape) * mutation_rate
+        self.weights_input_hidden += np.random.randn(*self.weights_input_hidden.shape) * mutation_value
+        self.weights_hidden_output += np.random.randn(*self.weights_hidden_output.shape) * mutation_value
+        self.bias_hidden += np.random.randn(*self.bias_hidden.shape) * mutation_value
+        self.bias_output += np.random.randn(*self.bias_output.shape) * mutation_value
 
 class EvolutionaryANNController(Actuation):
-    def __init__(self, agent, config, population_size=10, elitism_size=2):
+    def __init__(self, agent, config, population_size=10, elitism_size=2, mutation_rate=0.1):
         super().__init__(agent)
         self.config = config
-        self.population = [ANN(input_size=3, hidden_size=2, output_size=2) for _ in range(population_size)]
         self.population_size = population_size
         self.elitism_size = elitism_size
+        self.mutation_rate = mutation_rate
+        self.population = [ANN(input_size=3, hidden_size=2, output_size=2) for _ in range(population_size)]
         self.generation = 0
-        self.best_fitness = -np.inf
 
     def evolve_population(self):
         # Calculate fitness for each ANN in the population
@@ -49,14 +49,30 @@ class EvolutionaryANNController(Actuation):
         # Generate new population with mutation and elitism
         new_population = elites[:]
         while len(new_population) < self.population_size:
-            selected = random.choice(self.population)
-            offspring = deepcopy(selected)
-            offspring.mutate()
+            parent1, parent2 = np.random.choice(elites, 2, replace=False)
+            offspring = self.crossover(parent1, parent2)
+            self.mutate(offspring)
             new_population.append(offspring)
 
         self.population = new_population
         self.generation += 1
         print(f"Generation {self.generation} - Best fitness: {max(fitnesses)}")
+
+    def crossover(self, parent1, parent2):
+        child = deepcopy(parent1)
+        for attr in ['weights_input_hidden', 'weights_hidden_output', 'bias_hidden', 'bias_output']:
+            # Blend crossover
+            child_weights = (parent1.__dict__[attr] + parent2.__dict__[attr]) / 2
+            child.__dict__[attr] = child_weights
+        return child
+
+    def mutate(self, offspring):
+        # Mutation for weights and biases
+        for attr in ['weights_input_hidden', 'weights_hidden_output', 'bias_hidden', 'bias_output']:
+            if np.random.rand() < self.mutation_rate:
+                mutation_value = np.random.normal(0, 0.1, size=offspring.__dict__[attr].shape)
+                offspring.__dict__[attr] += mutation_value
+
     def controller(self):
         # Each control step will evaluate the current population and evolve it
         self.evolve_population()

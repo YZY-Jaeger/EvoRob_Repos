@@ -3,7 +3,7 @@ import math
 
 class Evolution():
     @staticmethod
-    def calculate_fitness(agent, grid_size=20):
+    def calculate_fitness(agent, grid_size=5):
         # Get the current position of the agent
         x, y, _ = agent.get_position()
 
