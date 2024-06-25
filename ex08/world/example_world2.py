@@ -16,10 +16,10 @@ class My_environment(Environment):
             self.staticRectList.append(color, pygame.Rect(x, y, width, height), border_width))
         Returns:
         """
-        self.staticRectList.append(['BLACK', pygame.Rect(5, 5, self.config['world_width'] - 10, 5),5])
-        self.staticRectList.append(['BLACK', pygame.Rect(5, 5, 5, self.config['world_height']-10), 5])
-        self.staticRectList.append(['BLACK', pygame.Rect(5, self.config['world_height']-10, self.config['world_width'] - 10,5), 5])
-        self.staticRectList.append(['BLACK', pygame.Rect(self.config['world_width'] - 10, 5, 5, self.config['world_height']-10), 5])
+        self.staticRectList.append(['RED', pygame.Rect(2,2, self.config['world_width'] - 5, 5),10])
+        self.staticRectList.append(['RED', pygame.Rect(2, 5, 5, self.config['world_height']-5), 10])
+        self.staticRectList.append(['RED', pygame.Rect(2, self.config['world_height']-5, self.config['world_width'] - 5,5), 10])
+        self.staticRectList.append(['RED', pygame.Rect(self.config['world_width'] - 5, 2, 5, self.config['world_height']-5), 10])
 
         self.staticRectList.append(
             ['BLACK', pygame.Rect(self.config['world_width']/2, self.config['world_height']/5,

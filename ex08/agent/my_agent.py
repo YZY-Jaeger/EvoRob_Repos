@@ -11,7 +11,7 @@ class MyAgent(Agent):
         self.eval_params = ANN()
         self.current_generation = 0
         self.visited_grid_cells = set() 
-
+        self.mistake = 0
     def initial_position(self):
         """
         Define the initial position of the agent.

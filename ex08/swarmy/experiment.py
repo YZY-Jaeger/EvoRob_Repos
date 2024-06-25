@@ -168,6 +168,6 @@ class Experiment():
                     agent.save_information(False)
 
 
-        print('Experiment finished by manual stopping or maximum timesteps reached. Check config.yaml to increase the maximum timesteps.')
+        #print('Experiment finished by manual stopping or maximum timesteps reached. Check config.yaml to increase the maximum timesteps.')
         pygame.quit()
         return None

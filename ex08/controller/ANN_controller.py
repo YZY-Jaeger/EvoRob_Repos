@@ -70,7 +70,8 @@ class EvolutionaryANNController(Actuation):
         max_speed = 3
         self.linear_velocity = min(abs((vl + vr) / 2), max_speed)
         self.angle_velocity = vr - vl
-        Evolution.calculate_fitness(self.agent) # Update fitness for the current ANN
+        if Evolution.calculate_fitness(self.agent) == 0: # Update fitness for the current ANN
+            self.agent.mistake += 1
         self.update_position(self.linear_velocity, self.angle_velocity)
 
     def update_position(self, speed, turn_angle):
