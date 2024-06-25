@@ -15,8 +15,7 @@ from controller.ANN_controller import EvolutionaryANNController
 from sensors.proximity_sensors import ProximitySensor
 from world.example_world2 import My_environment
 from agent.my_agent import MyAgent
-from evolution.evolution import Evolution
-
+from evolution.evolution import *
 # add your controller, if you have more than one controller, add them to the list and specify the percentage of robots that should use this controller in the config.yaml file
 agent_controller = [EvolutionaryANNController]
 # add your sensors, if you have more than one sensor, add them to the list all sensors are added to each robot
@@ -38,10 +37,14 @@ agent_sensing = [ProximitySensor]
     - repeat for each generation
 """
 
+generation_size = 10
+ann_num = 10
+
+Anns = [ANN(input_size=3, hidden_size=2, output_size=2) for _ in range(ann_num)]
 
 
-
-
-exp = Experiment(config, agent_controller, agent_sensing, My_environment, MyAgent)
-exp.init_robots()
-exp.run(config['rendering'])
+for gen in range(generation_size):
+    exp = Experiment(config, agent_controller, agent_sensing, My_environment, MyAgent)
+    for a in range(ann_num):
+        exp.init_robots()
+        exp.run(config['rendering'])
