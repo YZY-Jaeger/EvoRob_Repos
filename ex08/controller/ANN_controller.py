@@ -17,11 +17,12 @@ class ANN:
 
     def forward(self, inputs):
         # Feedforward
-        hidden = activation_function(np.dot(inputs, self.weights_input_hidden) + self.bias_hidden)
+        #hidden = activation_function(np.dot(inputs, self.weights_input_hidden) + self.bias_hidden)
+        hidden = activation_function(np.dot(inputs, self.weights_input_hidden) )
         output = activation_function(np.dot(hidden, self.weights_hidden_output) + self.bias_output)
         return output
 
-    def mutate(self, mutation_value=0.1):
+    def mutate(self, mutation_value=0.4):
         # Mutate weights and biases by adding a small random value
         self.weights_input_hidden += np.random.randn(*self.weights_input_hidden.shape) * mutation_value
         self.weights_hidden_output += np.random.randn(*self.weights_hidden_output.shape) * mutation_value
@@ -42,16 +43,23 @@ class EvolutionaryANNController(Actuation):
         # Calculate fitness for each ANN in the population
         fitnesses = [Evolution.calculate_fitness(self.agent) for ann in self.population]
 
-        # Rank ANNs by fitness and select the top ones as elites
-        ranked_population = sorted(zip(self.population, fitnesses), key=lambda x: x[1], reverse=True)
-        elites = [ind for ind, fit in ranked_population[:self.elitism_size]]
+        sorted_fitnesses = sorted(fitnesses, reverse=True)   
+        sum_fitnesses = sum(sorted_fitnesses)
+        sorted_fitnesses = [fit / sum_fitnesses for fit in sorted_fitnesses]#normalize fitnesses
+
+        sorted_pop = sorted(zip(self.population, fitnesses), key=lambda x: x[1], reverse=True)
+        elites = [ind for ind, fit in sorted_pop[:self.elitism_size]]
+
+        # Extract just the ANNs for selection
+        sorted_anns = [ann for ann, _ in sorted_pop]
 
         # Generate new population with mutation and elitism
         new_population = elites[:]
         while len(new_population) < self.population_size:
-            parent1, parent2 = np.random.choice(elites, 2, replace=False)
+            parent1, parent2 = np.random.choice(sorted_anns, 2, replace=False, p = sorted_fitnesses)
             offspring = self.crossover(parent1, parent2)
-            self.mutate(offspring)
+            if random.random() < 0.8:
+                self.mutate(offspring)
             new_population.append(offspring)
 
         self.population = new_population
