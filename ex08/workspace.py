@@ -41,10 +41,16 @@ generation_size = 10
 ann_num = 10
 
 Anns = [ANN(input_size=3, hidden_size=2, output_size=2) for _ in range(ann_num)]
-
+fitnesses = [0 for _ in range(ann_num)]
 
 for gen in range(generation_size):
-    exp = Experiment(config, agent_controller, agent_sensing, My_environment, MyAgent)
+    
     for a in range(ann_num):
+        exp = Experiment(config, agent_controller, agent_sensing, My_environment, MyAgent)
         exp.init_robots()
+        exp.agent_list[0].set_control_params(Anns[a])
+        print("----------------------------------------------------")
+
         exp.run(config['rendering'])
+        fitnesses[a] = Evolution.calculate_fitness(exp.agent_list[0])
+        print(f"Generation {gen} ANN {a} Fitness: {fitnesses[a]}")

@@ -50,7 +50,8 @@ class Actuation():
             
     @abstractmethod
     def torus(self):
-        print('Torus not implemented')
+        pass
+        #print('Torus not implemented')
 
     @abstractmethod
     def controller(self):

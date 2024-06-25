@@ -1,14 +1,14 @@
 from swarmy.agent import Agent
 import random
 import pygame
-from evolution.evolution import Evolution
+from evolution.evolution import Evolution, ANN
 class MyAgent(Agent):
     def __init__(self, environment, controller, sensor, config):
         super().__init__(environment, controller, sensor, config)
 
         self.environment = environment
         self.trajectory = []
-        self.eval_params = []
+        self.eval_params = ANN()
         self.current_generation = 0
         self.visited_grid_cells = set() 
 
@@ -63,6 +63,7 @@ class MyAgent(Agent):
 
     def set_evaluation_params (self, eval_params):
         self.eval_params = eval_params
+        
 
     def get_evaluation_params(self):
         return self.eval_params

@@ -1,9 +1,27 @@
 import numpy as np
 import math
-
+import pygame
 class Evolution():
     @staticmethod
+    def is_colliding_with_wall(agent, static_objects):
+        # Get the current position of the agent
+        x, y, _ = agent.get_position()
+        agent_rect = pygame.Rect(x, y, 1, 1)  # Assuming the agent can be represented as a 1x1 rectangle for collision detection
+
+        # Check collision with each static rectangle object
+        for obj in static_objects:
+            _, rect, _ = obj  # Assuming the structure is ['COLOR', pygame.Rect(), border_width]
+            if agent_rect.colliderect(rect):
+                return True
+        return False
+
+    @staticmethod
     def calculate_fitness(agent, grid_size=5):
+        # Check if the agent is colliding with a wall
+        if Evolution.is_colliding_with_wall(agent, agent.environment.staticRectList):
+            #fitness -= 0.0001 #punish the agent for colliding with a wall
+            return -1
+
         # Get the current position of the agent
         x, y, _ = agent.get_position()
 
@@ -14,12 +32,11 @@ class Evolution():
         # Calculate the grid cell that the agent is currently in
         grid_x = int(x / grid_size)
         grid_y = int(y / grid_size)
-        #print(grid_x,grid_y)
         # Add the current grid cell to the set of visited cells
         agent.visited_grid_cells.add((grid_x, grid_y))
 
         # The fitness is the number of unique grid cells visited / total number of grid cells
-        fitness = len(agent.visited_grid_cells)/(agent.config['world_width']/grid_size * agent.config['world_height']/grid_size)
+        fitness = len(agent.visited_grid_cells) / (agent.config['world_width']/grid_size * agent.config['world_height']/grid_size)
 
         return fitness
     
