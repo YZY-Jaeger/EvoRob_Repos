@@ -44,11 +44,14 @@ agent_sensing = [ProximitySensor]
 generation_size = 10
 ann_num = 12
 elitism_size = 4
-Anns = [ANN(input_size=3, hidden_size=2, output_size=2) for _ in range(ann_num)]
-fitnesses = [0 for _ in range(ann_num)]
 mutation_rate = 0.3
+
+
 best_fitnesses = []
 avg_fitnesses = []
+
+Anns = [ANN(input_size=3, hidden_size=2, output_size=2) for _ in range(ann_num)]
+fitnesses = [0 for _ in range(ann_num)]
 
 deterministic = 1
 
@@ -65,6 +68,7 @@ for gen in range(generation_size):
             exp.run(config['rendering'])
             fitnesses[a] = Evolution.calculate_fitness(exp.agent_list[0]) - exp.agent_list[0].mistake * 0.001
             print(f"Generation {gen} ANN {a} Fitness: {fitnesses[a]}")
+            
     else:
         for a in range(ann_num):
             exp = Experiment(config, agent_controller, agent_sensing, My_environment, MyAgent)

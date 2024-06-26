@@ -37,8 +37,15 @@ class Evolution():
         # Add the current grid cell to the set of visited cells
         agent.visited_grid_cells.add((grid_x, grid_y))
 
-        # The fitness is the number of unique grid cells visited / total number of grid cells
-        fitness = len(agent.visited_grid_cells) / (agent.config['world_width']/grid_size * agent.config['world_height']/grid_size)
+        # Calculate fitness based on visited grid cells
+        num_cells_visited = len(agent.visited_grid_cells)
+        total_grid_cells = (agent.config['world_width'] // grid_size) * (agent.config['world_height'] // grid_size)
+
+        # Ensure the fitness calculation uses a high-resolution grid (100x100 or more)
+        if grid_size >= 5:  # Adjust this condition based on your grid size requirement
+            fitness = num_cells_visited / total_grid_cells
+        else:
+            fitness = num_cells_visited / (100 * 100)  # Defaulting to 100x100 grid if condition not met
 
         return fitness
     

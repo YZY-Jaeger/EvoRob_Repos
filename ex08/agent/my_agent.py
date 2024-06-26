@@ -2,6 +2,8 @@ from swarmy.agent import Agent
 import random
 import pygame
 from evolution.evolution import Evolution, ANN
+import os
+
 class MyAgent(Agent):
     def __init__(self, environment, controller, sensor, config):
         super().__init__(environment, controller, sensor, config)
@@ -12,6 +14,7 @@ class MyAgent(Agent):
         self.current_generation = 0
         self.visited_grid_cells = set() 
         self.mistake = 0
+
     def initial_position(self):
         """
         Define the initial position of the agent.
@@ -28,9 +31,7 @@ class MyAgent(Agent):
         self.set_position(x, y, gamma)
 
 
-
-
-    def save_information(self, last_robot):
+    def save_information(self):
         """
         Save information of the agent, e.g. trajectory or the environmental plot.
         Hint:
@@ -42,9 +43,12 @@ class MyAgent(Agent):
          # Draw the trajectory
         self.draw_trajectory()
 
-        # Save the image to the local disk
-        pygame.image.save(self.environment.displaySurface, "trajectory.png")
-        pass
+        # Construct the file name with generation and ANN ID
+        file_name = "trajectory_.png"
+        file_path = os.path.join("trajectories", file_name)  # Replace "path_to_save_directory" with your actual directory path
+
+        # Save the image to the specified file path
+        pygame.image.save(self.environment.displaySurface, file_path)
 
     def draw_trajectory(self):
         self.trajectory = [point for point in self.trajectory]
@@ -52,11 +56,6 @@ class MyAgent(Agent):
         if len(self.trajectory) > 1:  # Ensure there are at least two points to draw a line
             positions = [(pos[0], pos[1]) for pos in self.trajectory]
             pygame.draw.lines(self.environment.displaySurface, (255, 0, 0), False, positions, 2)
-
-
-
-
-
 
 
 

@@ -43,7 +43,7 @@ class Experiment():
         self.agent = agent
         self.agent_list = []
         self.running = False
-        self.save_trajectory = False
+        #self.save_trajectory = False
         
 
 

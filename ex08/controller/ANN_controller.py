@@ -58,8 +58,8 @@ class EvolutionaryANNController(Actuation):
                 mutation_value = np.random.normal(0, 0.1, size=offspring.__dict__[attr].shape)
                 offspring.__dict__[attr] += mutation_value
 
+
     def controller(self):
-        
         # Each control step will evaluate the current population and evolve it
         #self.evolve_population()
 
@@ -81,5 +81,14 @@ class EvolutionaryANNController(Actuation):
         dy = speed * np.cos(np.radians(heading))
         new_x = x + dx
         new_y = y + dy
-        new_heading = int((heading + turn_angle) % 360)
+
+        #new_heading = round((heading + turn_angle) % (2 * math.pi))
+        new_heading = int(     (heading + turn_angle) % 360 )
+
+        # Set new position and heading
+        self.agent.trajectory.append((new_x, new_y))
+
+        self.agent.save_information()
+        
+        # Save the image
         self.agent.set_position(new_x, new_y, new_heading)
