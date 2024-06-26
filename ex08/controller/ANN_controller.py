@@ -82,4 +82,8 @@ class EvolutionaryANNController(Actuation):
         new_x = x + dx
         new_y = y + dy
         new_heading = int((heading + turn_angle) % 360)
+
+        self.agent.trajectory.append((new_x, new_y))
+        # Save the image
+        self.agent.save_information(None)
         self.agent.set_position(new_x, new_y, new_heading)

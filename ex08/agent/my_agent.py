@@ -12,6 +12,7 @@ class MyAgent(Agent):
         self.current_generation = 0
         self.visited_grid_cells = set() 
         self.mistake = 0
+        self.current_ann = -1
     def initial_position(self):
         """
         Define the initial position of the agent.
@@ -43,7 +44,8 @@ class MyAgent(Agent):
         self.draw_trajectory()
 
         # Save the image to the local disk
-        pygame.image.save(self.environment.displaySurface, "trajectory.png")
+        file_name = "trajectory" + "GEN_"+str(self.current_generation)+"_ANN_"+str(self.current_ann) + ".png"
+        pygame.image.save(self.environment.displaySurface, file_name)
         pass
 
     def draw_trajectory(self):

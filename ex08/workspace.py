@@ -49,8 +49,8 @@ fitnesses = [0 for _ in range(ann_num)]
 mutation_rate = 0.3
 best_fitnesses = []
 avg_fitnesses = []
-
-deterministic = 1
+best_ann_each_generation = [] 
+deterministic = 0
 
 for gen in range(generation_size):
     
@@ -59,6 +59,8 @@ for gen in range(generation_size):
             exp = Experiment(config, agent_controller, agent_sensing, My_environment, MyAgent)
             exp.init_robots()
             exp.agent_list[0].set_control_params(Anns[a])
+            exp.agent_list[0].current_ann = a
+            exp.agent_list[0].current_generation = gen
             exp.agent_list[0].set_position(330, 330, 0)
             print("----------------------------------------------------")
 
@@ -70,6 +72,8 @@ for gen in range(generation_size):
             exp = Experiment(config, agent_controller, agent_sensing, My_environment, MyAgent)
             exp.init_robots()
             exp.agent_list[0].set_control_params(Anns[a])
+            exp.agent_list[0].current_generation = gen
+            exp.agent_list[0].current_ann = a
             print("----------------------------------------------------")
 
             exp.run(config['rendering'])
@@ -84,12 +88,15 @@ for gen in range(generation_size):
     # Calculate and print the best and average fitness for the current generation
     best_fitness = max(fitnesses)
     avg_fitness = sum(fitnesses) / len(fitnesses)
-    print(f"Best Fitness in Generation {gen}: {best_fitness}")
+    best_fitness_index = fitnesses.index(max(fitnesses))
+    print(f"Best Fitness in Generation {gen}: {best_fitness}, index: {best_fitness_index}")
+    best_ann_each_generation.append((best_fitness_index, max(fitnesses)))
     print(f"Average Fitness in Generation {gen}: {avg_fitness}")
     # Store the fitness values
     best_fitnesses.append(best_fitness)
     avg_fitnesses.append(avg_fitness)
 
+    
 
     sorted_fitnesses = sorted(fitnesses, reverse=True)   
     '''
@@ -109,7 +116,7 @@ for gen in range(generation_size):
     selection_probabilities = [(total_ranks - rank + 1) / total_ranks for rank in ranks]
     selection_probabilities_sum = sum(selection_probabilities)
     selection_probabilities = [p / selection_probabilities_sum for p in selection_probabilities]
-    print(selection_probabilities)
+
     elites = [Anns[i] for i in sorted_indices[:elitism_size]]
     #elites = [ind for ind, fit in sorted_pop[:elitism_size]]
 
@@ -126,8 +133,12 @@ for gen in range(generation_size):
         new_population.append(offspring)
 
     Anns = new_population
-    exp.agent_list[0].current_generation += 1
+    
 
+
+for gen, (ann_number, fitness) in enumerate(best_ann_each_generation):
+    print(f"Generation {gen}: Best ANN Number: {ann_number}, Fitness: {fitness}")
+    
 plt.figure(figsize=(10, 5))
 plt.plot(best_fitnesses, label='Best Fitness')
 plt.plot(avg_fitnesses, label='Average Fitness')
