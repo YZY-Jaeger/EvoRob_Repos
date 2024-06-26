@@ -1,8 +1,0 @@
-plots/*
-capture/*
-measurements/*
-test/
-venv/
-.DS_Store
-.idea/
-__pycache__/
