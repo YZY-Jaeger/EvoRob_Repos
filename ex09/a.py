@@ -122,6 +122,7 @@ class RingProblem:
     
     def get_motion_directions(self):
         directions = []
+        indices = []
 
         # Iterate through each cell in the ring
         for cell_number in range(40):
@@ -136,12 +137,22 @@ class RingProblem:
                 directions.append("CW")
             else:
                 directions.append("CCW")
-        return directions
+            
+            # Record the index of the cell
+            indices.append(cell_number)
+
+        return directions, indices
 
 # Run the simulation
 ring_problem = RingProblem()
 fitness_history = ring_problem.evolve()
 
-# Output motion directions
-motion_directions = ring_problem.get_motion_directions()
-print("Motion Directions for each cell:", motion_directions)
+# Output motion directions for each cell
+motion_directions, indices = ring_problem.get_motion_directions()
+print("Motion Directions for each cell:")
+for index, direction in zip(indices, motion_directions):
+    print(f"Cell {index}: {direction}")
+
+# Print left and right half indices
+print("Left Half Indices:", ring_problem.left_half_indices)
+print("Right Half Indices:", ring_problem.right_half_indices)
