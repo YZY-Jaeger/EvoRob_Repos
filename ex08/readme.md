@@ -1,21 +1,25 @@
-## EvoRobotics Group Assignment 09
-Overall detailed code explanations are commented in the code.
+# EvoRobotics Group Assignment 08
 
-### Team Members
+## Team Members
 - **Minsol Kim**
 - **Yu Zeyuan**
 
-### Completed Tasks:
-1. **Output Motion Directions for Each Ring Cell:**
-   - Implemented a method to simulate the agent's movement on a ring and output whether it moves clockwise (CW) or counterclockwise (CCW) for each cell.
+## Project Files and Directory Structure
+ **Task completed:**
+ - **evolutionary code with deterministic(starts at bottom right) and non-deterministic(random position) starts**
+ - **using bias**
+ - **trajectories and fitness plots, in Plots.pdf**
+ 
+ **Task NOT completed:**
+ - **forgot to record plot and fit without using Bias**
 
-### Tasks/Subtasks Not Completed:
-1. **Plot Best Fitness Over Generations:**
-   - Attempted to implement plotting of the best fitness and population-average fitness over generations during a successful evolutionary run. Encountered challenges in formatting the fitness history array correctly, resulting in array errors.
+ ## Things to improve
 
-2. **Understanding Fast Evolution Achievement:**
-   - Observed rapid convergence of the evolutionary process to high fitness levels. Investigation into the underlying reasons for this accelerated convergence is ongoing.
+ - **observe and get better conclusion for influence of bias and random initialization**
+  - **make simulation faster**
 
-3. **Determining Optimal Population Size:**
-   - Uncertainty remains regarding the optimal size of the population for the evolutionary algorithm. Further exploration is needed to understand how population size impacts performance and convergence.
+## Changes, influence and discussion
+
+ - **added "mistake" variable to record robot running into walls, then "punish" with a reduction of fitness**
+  - **after using random starts, the "good" ann in the last round do NOT always keep being good in current generation**
 
