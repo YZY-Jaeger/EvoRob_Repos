@@ -1,3 +1,4 @@
+import numpy as np
 import random
 
 class RingProblem:
@@ -12,15 +13,15 @@ class RingProblem:
         # Initialize the agent's position randomly within the ring
         self.agent_position = random.randint(0, self.num_cells - 1)
         
-        # Initialize the weights of the neural network with random values as lists
-        self.network_weights = [random.random() for _ in range(20)]
+        # Initialize the weights of the neural network with random values
+        self.network_weights = np.random.rand(20)
     
     def get_input_vector(self, current_cell_number):
         # Ensure the cell_number is within the range of 0 to 19
         normalized_cell_number = current_cell_number % 20
 
         # Creates a vector of 20 zeros
-        input_vector = [0] * 20
+        input_vector = np.zeros(20)
         
         # Set the position corresponding to the cell number to 1
         input_vector[normalized_cell_number] = 1
@@ -29,7 +30,7 @@ class RingProblem:
 
     def activation_function(self, x):
         # Sigmoid activation function
-        return 1 / (1 + pow(2.71828, -x))
+        return 1 / (1 + np.exp(-x))
 
     def move_agent(self):
         # Get the current cell number where the agent is positioned
@@ -38,8 +39,10 @@ class RingProblem:
         # Convert the cell number to a one-hot encoded input vector
         input_vector = self.get_input_vector(current_cell_number)
         
-        # Compute the net input to the neural network by dot product and apply activation function
-        net_input = sum(input_vector[i] * self.network_weights[i] for i in range(20))
+        # Compute the net input to the neural network by dot product : multiplied with the corresponding weight
+        net_input = np.dot(input_vector, self.network_weights)
+        
+        # Get the output from the activation function (sigmoid)
         output = self.activation_function(net_input)
         
         # Move the agent based on the output: CW if output >= 0.5, otherwise CCW
@@ -62,8 +65,8 @@ class RingProblem:
         return left_half_time / steps 
     
     def evolve(self, generations=20, population_size=20, mutation_rate=0.01):
-        # Initialize a population of neural networks with random weights as lists
-        population = [[random.random() for _ in range(20)] for _ in range(population_size)]
+        # Initialize a population of neural networks with random weights
+        population = [np.random.rand(20) for _ in range(population_size)]
         fitness_history = []
         
         for generation in range(generations):
@@ -73,7 +76,12 @@ class RingProblem:
             for individual in population:
                 self.network_weights = individual
                 fitness = self.evaluate_fitness()
-                fitness_scores.append((fitness, individual[:]))  # Store a copy of the individual
+                fitness_scores.append((fitness, individual))
+                
+                # Check if fitness has reached more than 0.998
+                if fitness > 0.998:
+                    print(f"Stopping evolution at Generation {generation}, Best Fitness: {fitness}")
+                    return fitness_history
             
             # Sort the population by fitness scores in descending order
             fitness_scores.sort(key=lambda x: x[0], reverse=True)
@@ -86,7 +94,7 @@ class RingProblem:
             while len(new_population) < population_size:
                 # Select two parents from the top 10% of the population
                 parent1, parent2 = random.choices(fitness_scores[:population_size // 10], k=2)
-                # Create a child by combining the parents' weights using crossover
+                # Create a child by combining the parents' weights
                 child = self.crossover(parent1[1], parent2[1])
                 # Mutate the child's weights
                 child = self.mutate(child, mutation_rate)
@@ -95,11 +103,6 @@ class RingProblem:
             population = new_population
             
             print(f"Generation {generation}, Best Fitness: {fitness_scores[0][0]}")
-            
-            # Check if fitness condition is met
-            if fitness_scores[0][0] > 0.998:
-                print(f"Fitness condition reached in generation {generation}. Stopping evolution.")
-                break
         
         # Set the network weights to the best individual from the final generation
         self.network_weights = fitness_scores[0][1]
@@ -108,14 +111,13 @@ class RingProblem:
     def crossover(self, parent1, parent2):
         # Perform single-point crossover between two parents
         crossover_point = random.randint(0, 19)
-        child = parent1[:crossover_point] + parent2[crossover_point:]
-        return child
+        return np.concatenate((parent1[:crossover_point], parent2[crossover_point:]))
     
     def mutate(self, individual, rate):
         # Mutate the individual's weights with a given mutation rate
         for i in range(len(individual)):
             if random.random() < rate:
-                individual[i] += random.uniform(-0.5, 0.5)
+                individual[i] += np.random.normal()
         return individual
     
     def get_motion_directions(self):
@@ -143,4 +145,3 @@ fitness_history = ring_problem.evolve()
 # Output motion directions
 motion_directions = ring_problem.get_motion_directions()
 print("Motion Directions for each cell:", motion_directions)
-
