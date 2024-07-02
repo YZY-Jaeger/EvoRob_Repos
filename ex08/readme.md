@@ -1,4 +1,5 @@
 ## EvoRobotics Group Assignment 09
+Overall detailed code explanations are commented in the code.
 
 ### Team Members
 - **Minsol Kim**
